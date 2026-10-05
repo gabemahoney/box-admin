@@ -2,7 +2,7 @@
 
 The public entry point for Gabe's box setup. The real repo, `gabemahoney/box-admin-core`, is private.
 
-Clone this repo (or `git pull` it), start Claude Code in it, and ask it to follow this repo. Claude
-looks for the personal GitHub token in its environment, the box's environment file and gh's
-sign-in; if none has it, Claude walks you through a quick gh sign-in. It then clones the private repo and carries on.
-Tokens are never printed or pasted into a chat.
+Start plain `claude` (default permission mode, not auto) in any folder, say "clone
+github.com/gabemahoney/box-admin and follow it", and approve the setup scripts when Claude asks. Claude
+clones the private core repo with the box's GitHub token (or walks you through a quick gh sign-in) and
+carries on. Tokens are never printed or pasted into a chat.
