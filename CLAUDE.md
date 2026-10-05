@@ -10,4 +10,5 @@ Never print, echo or log a token; never read another process's environment.
    ```
 3. Only if all three find nothing, ask the human to sign in: type
    `! gh auth login --hostname github.com --git-protocol https --web` as `gabemahoney`, then run step 2 again.
-4. Run `python3 ~/box_admin/box_admin_core/bootstrap horde`, then run the setup_box skill: follow `~/box_admin/box_admin_core/.claude/skills/setup_box/SKILL.md`.
+4. Find the box type: the core README's Box types table lists each type's check command; run them and use the one that matches. If none or several match, ask the human.
+5. Run `python3 ~/box_admin/box_admin_core/bootstrap <type>`, then follow `~/box_admin/box_admin_core/.claude/skills/setup_box/SKILL.md`.
