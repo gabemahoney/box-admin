@@ -1,17 +1,16 @@
 # Instructions for Claude
 
-Entry point for Gabe's box setup. The real repo, `gabemahoney/box-admin-core`, is private, so the
-first run on a new box goes like this. Never print, echo or log a token; check variables by name;
-never read another process's environment.
+Entry point for Gabe's box setup. The real repo, `gabemahoney/box-admin-core`, is private.
+Never print, echo or log a token; never read another process's environment.
 
 1. If this repo was already cloned here, `git -C <its folder> pull` and re-read this file.
-2. If `GH_TOKEN_PERSONAL` is in your environment (`compgen -e | grep -x GH_TOKEN_PERSONAL`), clone core:
-   `GH_TOKEN="$GH_TOKEN_PERSONAL" gh repo clone gabemahoney/box-admin-core ~/box_admin/box_admin_core`
-3. Otherwise it is usually in the box's environment file, which shells here don't always load. Check
-   by name (`grep -c '^GH_TOKEN_PERSONAL=' /etc/environment`), then clone with it, read in memory:
-   `GH_TOKEN="$(sed -n 's/^GH_TOKEN_PERSONAL=//p' /etc/environment | tr -d '"')" gh repo clone gabemahoney/box-admin-core ~/box_admin/box_admin_core`
-4. If it isn't there either, the next step is the usual gh sign-in: ask the human to type
+2. Find the personal token and clone core, in ONE command. It checks, in order, (a) your own
+   environment, (b) the box's environment file `/etc/environment`, (c) gh's sign-in as `gabemahoney`,
+   and clones with the first one found, never printing it. Run it exactly as written:
+   ```
+   T="${GH_TOKEN_PERSONAL:-$(sed -n 's/^GH_TOKEN_PERSONAL=//p' /etc/environment 2>/dev/null | tr -d '"')}"; T="${T:-$(env -u GH_TOKEN -u GITHUB_TOKEN gh auth token --hostname github.com --user gabemahoney 2>/dev/null)}"; if [ -n "$T" ]; then GH_TOKEN="$T" gh repo clone gabemahoney/box-admin-core ~/box_admin/box_admin_core; else echo "no token in env, /etc/environment or gh"; fi; unset T
+   ```
+3. Only if all three find nothing, ask the human to sign in: type
    `! gh auth login --hostname github.com --git-protocol https --web` and sign in as `gabemahoney`
-   (a minute in the browser with a device code), then clone with gh's sign-in:
-   `GH_TOKEN="$(env -u GH_TOKEN -u GITHUB_TOKEN gh auth token --hostname github.com --user gabemahoney)" gh repo clone gabemahoney/box-admin-core ~/box_admin/box_admin_core`
-5. Follow the Bootstrap section of `~/box_admin/box_admin_core/README.md`.
+   (a minute in the browser with a device code). Then run step 2 again.
+4. Follow the Bootstrap section of `~/box_admin/box_admin_core/README.md`.
