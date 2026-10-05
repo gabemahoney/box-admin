@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Clone the private box-admin-core with the personal GitHub token: own env, then
+# /etc/environment (by name), then gh's sign-in. Never prints the token.
+dest=~/projects/box_admin/box_admin_core
+if [ -d "$dest/.git" ]; then echo "clone-core: core is already at $dest"; exit 0; fi
+t="${GH_TOKEN_PERSONAL:-}"
+[ -n "$t" ] || t="$(sed -n 's/^GH_TOKEN_PERSONAL=//p' /etc/environment 2>/dev/null | tr -d '"')"
+[ -n "$t" ] || t="$(env -u GH_TOKEN -u GITHUB_TOKEN gh auth token --hostname github.com --user gabemahoney 2>/dev/null)"
+if [ -z "$t" ]; then
+  echo "clone-core: no personal GitHub token in the environment, /etc/environment or gh's sign-in." >&2
+  echo "Sign in: gh auth login --hostname github.com --git-protocol https --web (as gabemahoney), then rerun." >&2
+  exit 1
+fi
+mkdir -p "$(dirname "$dest")" && GH_TOKEN="$t" gh repo clone gabemahoney/box-admin-core "$dest" -- -q
