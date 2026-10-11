@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Clone the private box-admin-core with the personal GitHub token from this shell's
+# environment, else gh's sign-in (boxes with no secret store). Never prints the token.
+# BOX_ADMIN_ROOT is where the box_admin checkouts live: an absolute path (default ~/projects/box_admin).
+case "${BOX_ADMIN_ROOT:-}" in ""|/*) ;; *) echo "clone-core: BOX_ADMIN_ROOT must be an absolute path" >&2; exit 1;; esac
+dest="${BOX_ADMIN_ROOT:-$HOME/projects/box_admin}/box_admin_core"
+if [ -d "$dest/.git" ]; then echo "clone-core: core is already at $dest"; exit 0; fi
+t="${GH_TOKEN_PERSONAL:-}"
+[ -n "$t" ] || t="$(env -u GH_TOKEN -u GITHUB_TOKEN gh auth token --hostname github.com --user gabemahoney 2>/dev/null)"
+if [ -z "$t" ]; then
+  echo "clone-core: GH_TOKEN_PERSONAL is not in this shell's environment: the box's secrets aren't loaded here." >&2
+  echo "Stop here until the box's secret store delivers it to new shells (a known issue on some boxes)." >&2
+  echo "On a box with no secret store, sign gh in as gabemahoney (gh auth login --web) and rerun." >&2
+  exit 1
+fi
+mkdir -p "$(dirname "$dest")" && GH_TOKEN="$t" gh repo clone gabemahoney/box-admin-core "$dest" -- -q
