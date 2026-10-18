@@ -10,5 +10,11 @@ core repo with the box's GitHub token (or walks you through a quick gh sign-in),
 carries on. If the bootstrap fails, Claude shows what it printed and stops. Tokens are never printed or
 pasted into a chat. A checkout of this repo that already exists elsewhere is used where it is.
 
+That start line is enough: if the layer has no `SKILL.md` or no `hosts/<host>/`, Claude opens a
+read-only intake PR, polls it and the layer every few minutes, answers comments and reviews the owner's
+setup PR. When that PR merges to the layer's `main`, Claude pulls and reruns setup_box from the top.
+At human-only steps (tokens, AD migration, Slack credentials and Claude sign-in), it gives exact commands
+with hidden `read -rs` prompts for secrets, waits, then carries on. It reports on the PR until setup runs clean.
+
 The core and layer checkouts go in `~/projects/box_admin`. To put them elsewhere, export
 `BOX_ADMIN_ROOT=<absolute dir>` in the shell before starting `claude`.
