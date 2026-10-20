@@ -2,9 +2,9 @@
 
 The public entry point for Gabe's box setup. The real repo, `gabemahoney/box-admin-core`, is private.
 
-Start plain `claude` (default permission mode, not auto) in any folder, say "clone
+Start `claude --permission-mode acceptEdits --allowedTools Bash` (never auto or bypass) in any folder, say "clone
 github.com/gabemahoney/box-admin into ~/projects/box-admin and follow it; layer `<layer repo URL>` with
-`<VAR>=<login>`", and approve the setup scripts when Claude asks. Copy the layer part from the start line
+`<VAR>=<login>`", and Claude first writes the permissions block to `~/.claude/settings.json` (approve that once), so nothing else prompts. Copy the layer part from the start line
 in the README of your box type's layer repo; without it, Claude asks for it. Claude clones the private
 core repo with the box's GitHub token (or walks you through a quick gh sign-in), bootstraps that layer and
 carries on. If the bootstrap fails, Claude shows what it printed and stops. Tokens are never printed or
@@ -24,11 +24,11 @@ above, finishing what it can while you answer the intake PR.
 
 **Tokens, any login shell (bash or tcsh).** Claude needs `GH_TOKEN_PERSONAL` (and `GH_TOKEN_WORK` if the
 layer wants it) in its environment, and a tcsh login shell has no `read` or `export`. Type this one line in
-the terminal; it prompts hidden, never echoes, and starts Claude with both set (drop the work half if you
+the terminal; it prompts hidden, never echoes, and starts Claude, already permissive, with both set (drop the work half if you
 have none):
 
 ```sh
-bash -c 'set +x; IFS= read -rs -p "GH_TOKEN_PERSONAL: " GH_TOKEN_PERSONAL; echo; IFS= read -rs -p "GH_TOKEN_WORK: " GH_TOKEN_WORK; echo; export GH_TOKEN_PERSONAL GH_TOKEN_WORK; exec claude'
+bash -c 'set +x; IFS= read -rs -p "GH_TOKEN_PERSONAL: " GH_TOKEN_PERSONAL; echo; IFS= read -rs -p "GH_TOKEN_WORK: " GH_TOKEN_WORK; echo; export GH_TOKEN_PERSONAL GH_TOKEN_WORK; exec claude --permission-mode acceptEdits --allowedTools Bash'
 ```
 
 The core and layer checkouts go in `~/projects/box_admin`. To put them elsewhere, export

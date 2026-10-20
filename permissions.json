@@ -1,0 +1,38 @@
+{
+  "additionalDirectories": [
+    "~/image_drop",
+    "/tmp",
+    "~/projects"
+  ],
+  "allow": [
+    "Bash",
+    "Read(~/**)",
+    "Read(//tmp/**)",
+    "Edit(~/**)",
+    "Edit(//tmp/**)",
+    "Glob",
+    "Grep",
+    "WebFetch",
+    "WebSearch",
+    "Task",
+    "RemoteTrigger",
+    "CronCreate",
+    "CronDelete",
+    "CronList"
+  ],
+  "ask": [
+    "Bash(git reset --hard*)",
+    "Bash(git clean*)",
+    "Bash(git stash*)"
+  ],
+  "defaultMode": "acceptEdits",
+  "deny": [
+    "AskUserQuestion",
+    "Bash(tmux kill-server*)",
+    "Bash(pkill tmux*)",
+    "Bash(killall tmux*)",
+    "Bash(kill $(pgrep tmux)*)",
+    "Bash(claude)",
+    "Bash(claude *)"
+  ]
+}
