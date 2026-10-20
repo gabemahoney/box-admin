@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Clone the private box-admin-core with the personal GitHub token from this shell's
 # environment, else gh's sign-in (boxes with no secret store). Never prints the token.
-# BOX_ADMIN_ROOT is where the box_admin checkouts live: an absolute path (default ~/projects/box_admin).
+# BOX_ADMIN_ROOT is where the box_admin checkouts live: an absolute path (default ~/projects/sysadmin-project/box_admin_dev).
 case "${BOX_ADMIN_ROOT:-}" in ""|/*) ;; *) echo "clone-core: BOX_ADMIN_ROOT must be an absolute path" >&2; exit 1;; esac
-dest="${BOX_ADMIN_ROOT:-$HOME/projects/box_admin}/box_admin_core"
+dest="${BOX_ADMIN_ROOT:-$HOME/projects/sysadmin-project/box_admin_dev}/box_admin_core"
 if [ -d "$dest/.git" ]; then echo "clone-core: core is already at $dest"; exit 0; fi
 t="${GH_TOKEN_PERSONAL:-}"
 if [ -z "$t" ] && command -v gh >/dev/null; then

@@ -31,5 +31,5 @@ have none):
 bash -c 'set +x; IFS= read -rs -p "GH_TOKEN_PERSONAL: " GH_TOKEN_PERSONAL; echo; IFS= read -rs -p "GH_TOKEN_WORK: " GH_TOKEN_WORK; echo; export GH_TOKEN_PERSONAL GH_TOKEN_WORK; exec claude --permission-mode acceptEdits --allowedTools Bash'
 ```
 
-The core and layer checkouts go in `~/projects/box_admin`. To put them elsewhere, export
+The core and layer checkouts go in `~/projects/sysadmin-project/box_admin_dev` (core's standard layout). To put them elsewhere, export
 `BOX_ADMIN_ROOT=<absolute dir>` in the shell before starting `claude`.
