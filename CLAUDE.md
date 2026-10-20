@@ -2,6 +2,9 @@
 
 Entry point for Gabe's box setup; the real repo, `gabemahoney/box-admin-core`, is private.
 Never print, echo or log a token; never read another process's environment.
+Run without hand-holding: never ask "should I continue?" or offer options. When you truly need the human, say it in one or two plain lines with the exact command, nothing else.
+Setup expects the default permission mode (see README). If auto mode denies a setup step, don't work around it or offer options: say in one line that setup needs the default mode (Shift+Tab out of auto), wait, then retry that step.
+A missing tool you can install without sudo (e.g. gh from its release tarball, checksum verified, into `~/.local/bin`) is not a reason to stop: install it and note it on the intake PR.
 The human names the box's layer when starting: `<layer repo URL>` and `<VAR>=<login>`, both copied from that layer's README; or, for a box no layer fits, `new layer <type>` (lowercase letters and digits), optionally with `GH_TOKEN_<NAME>=<login>` pairs. If neither form is given, ask the human for it before step 1; never list or guess layers.
 
 1. `<entry dir>` is this CLAUDE.md's directory; leave it where it is if BOX_ADMIN_ROOT is set or it is a checkout of gabemahoney/box-admin, i.e. `git -C "<entry dir>" remote get-url origin | grep -qE 'github\.com[:/]gabemahoney/box-admin(\.git)?$'` exits 0 (it prints nothing; never print the URL). Otherwise this repo belongs at `~/projects/box-admin`: if you are anywhere else, `mkdir -p ~/projects`, move or clone it there, and continue from that copy (`git -C ~/projects/box-admin pull` if it was already there) as `<entry dir>`; re-read its CLAUDE.md.

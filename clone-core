@@ -6,12 +6,19 @@ case "${BOX_ADMIN_ROOT:-}" in ""|/*) ;; *) echo "clone-core: BOX_ADMIN_ROOT must
 dest="${BOX_ADMIN_ROOT:-$HOME/projects/box_admin}/box_admin_core"
 if [ -d "$dest/.git" ]; then echo "clone-core: core is already at $dest"; exit 0; fi
 t="${GH_TOKEN_PERSONAL:-}"
-[ -n "$t" ] || t="$(env -u GH_TOKEN -u GITHUB_TOKEN gh auth token --hostname github.com --user gabemahoney 2>/dev/null)"
+if [ -z "$t" ] && command -v gh >/dev/null; then
+  t="$(env -u GH_TOKEN -u GITHUB_TOKEN gh auth token --hostname github.com --user gabemahoney 2>/dev/null)"
+fi
 if [ -z "$t" ]; then
+  command -v gh >/dev/null || echo "clone-core: gh is not installed, so there is no gh sign-in to fall back on." >&2
   echo "clone-core: GH_TOKEN_PERSONAL is not in this shell's environment: the box's secrets aren't loaded here." >&2
   echo "Stop here until the box's secret store delivers it to new shells (a known issue on some boxes)." >&2
   echo "On a box with no secret store, sign gh in as gabemahoney (gh auth login --web) and rerun." >&2
   echo "Or quit Claude and restart it with the token (any shell, tcsh too): see the token line in the box-admin README." >&2
   exit 1
 fi
-mkdir -p "$(dirname "$dest")" && GH_TOKEN="$t" gh repo clone gabemahoney/box-admin-core "$dest" -- -q
+# Plain git, so a box without gh still works: the token reaches git's credential helper through the
+# environment only, never argv or output.
+mkdir -p "$(dirname "$dest")" && CLONE_CORE_TOKEN="$t" git -c credential.helper= \
+  -c 'credential.helper=!f() { echo username=x-access-token; echo "password=$CLONE_CORE_TOKEN"; }; f' \
+  -c core.askPass= clone -q https://github.com/gabemahoney/box-admin-core.git "$dest"
