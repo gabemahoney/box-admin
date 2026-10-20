@@ -11,6 +11,7 @@ if [ -z "$t" ]; then
   echo "clone-core: GH_TOKEN_PERSONAL is not in this shell's environment: the box's secrets aren't loaded here." >&2
   echo "Stop here until the box's secret store delivers it to new shells (a known issue on some boxes)." >&2
   echo "On a box with no secret store, sign gh in as gabemahoney (gh auth login --web) and rerun." >&2
+  echo "Or quit Claude and restart it with the token (any shell, tcsh too): see the token line in the box-admin README." >&2
   exit 1
 fi
 mkdir -p "$(dirname "$dest")" && GH_TOKEN="$t" gh repo clone gabemahoney/box-admin-core "$dest" -- -q
