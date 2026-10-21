@@ -16,5 +16,5 @@ setup PR. When that PR merges to the layer's `main`, Claude pulls and reruns set
 At human-only steps (tokens, AD migration, Slack credentials and Claude sign-in), it gives exact commands
 with hidden `read -rs` prompts for secrets, waits, then carries on. It reports on the PR until setup runs clean.
 
-The core and layer checkouts go in `~/projects/box_admin`. To put them elsewhere, export
-`BOX_ADMIN_ROOT=<absolute dir>` in the shell before starting `claude`.
+The core and layer checkouts go in `~/projects/sysadmin-project/box_admin_dev`. To put them elsewhere,
+export `BOX_ADMIN_ROOT=<absolute dir>` in the shell before starting `claude`.
