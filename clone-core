@@ -1,10 +1,27 @@
 #!/usr/bin/env bash
 # Clone the private box-admin-core with the personal GitHub token from this shell's
 # environment, else gh's sign-in (boxes with no secret store). Never prints the token.
-# BOX_ADMIN_ROOT is where the box_admin checkouts live: an absolute path (default ~/projects/box_admin).
+# The root is where the box_admin checkouts live, first match wins: BOX_ADMIN_ROOT (an absolute path);
+# this checkout's parent, if it is under $HOME, is not sticky (shared temp folders such as /tmp
+# are, even when bind-mounted under $HOME), holds box_admin_core and that box_admin_core is owned
+# by you; ~/projects/sysadmin-project/box_admin_dev, if it holds box_admin_core;
+# ~/projects/box_admin, if it holds box_admin_core; else ~/projects/sysadmin-project/box_admin_dev.
+# A folder holds box_admin_core when box_admin_core/.git exists as a directory or a file (a git
+# worktree). On success, the last stdout line is the core's path.
 case "${BOX_ADMIN_ROOT:-}" in ""|/*) ;; *) echo "clone-core: BOX_ADMIN_ROOT must be an absolute path" >&2; exit 1;; esac
-dest="${BOX_ADMIN_ROOT:-$HOME/projects/box_admin}/box_admin_core"
-if [ -d "$dest/.git" ]; then echo "clone-core: core is already at $dest"; exit 0; fi
+holds_core() { [ -e "$1/box_admin_core/.git" ]; }
+under_home() { case "$1/" in "$HOME"/*) return 0;; *) return 1;; esac; }
+parent="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+default="$HOME/projects/sysadmin-project/box_admin_dev"
+old="$HOME/projects/box_admin"
+if [ -n "${BOX_ADMIN_ROOT:-}" ]; then root="$BOX_ADMIN_ROOT"
+elif under_home "$parent" && [ ! -k "$parent" ] && holds_core "$parent" && [ -O "$parent/box_admin_core" ]; then root="$parent"
+elif holds_core "$default"; then root="$default"
+elif holds_core "$old"; then root="$old"
+else root="$default"
+fi
+dest="$root/box_admin_core"
+if holds_core "$root"; then echo "clone-core: core is already at $dest" >&2; echo "$dest"; exit 0; fi
 t="${GH_TOKEN_PERSONAL:-}"
 [ -n "$t" ] || t="$(env -u GH_TOKEN -u GITHUB_TOKEN gh auth token --hostname github.com --user gabemahoney 2>/dev/null)"
 if [ -z "$t" ]; then
@@ -13,4 +30,4 @@ if [ -z "$t" ]; then
   echo "On a box with no secret store, sign gh in as gabemahoney (gh auth login --web) and rerun." >&2
   exit 1
 fi
-mkdir -p "$(dirname "$dest")" && GH_TOKEN="$t" gh repo clone gabemahoney/box-admin-core "$dest" -- -q
+mkdir -p "$root" && GH_TOKEN="$t" gh repo clone gabemahoney/box-admin-core "$dest" -- -q && echo "$dest"
