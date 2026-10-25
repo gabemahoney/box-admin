@@ -22,6 +22,8 @@ name for the box type; the token pair is optional). Claude checks no layer alrea
 approve one command that creates the private layer repo `gabemahoney/box-admin-<type>`, then carries on as
 above, finishing what it can while you answer the intake PR.
 
+To bring a set-up box current, tell its sysadmin bot "pull box-admin and follow its update instructions".
+
 **Tokens, any login shell (bash or tcsh).** Claude needs `GH_TOKEN_PERSONAL` (and `GH_TOKEN_WORK` if the
 layer wants it) in its environment, and a tcsh login shell has no `read` or `export`. Type this one line in
 the terminal; it prompts hidden, never echoes, and starts Claude, already permissive, with both set (drop the work half if you
