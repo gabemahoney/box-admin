@@ -70,6 +70,11 @@ class CloneCoreRootTest(unittest.TestCase):
 
 
 class ClaudeMdRootTest(unittest.TestCase):
+    def test_update_guards_session_source(self):  # b.8ox
+        update = (REPO / "CLAUDE.md").read_text().split("\n## Update\n", 1)[1].split("\n## ", 1)[0]
+        self.assertEqual(re.findall(r"`(\. ~/\.secrets/session\.bash[^`]*)`", update),
+                         [". ~/.secrets/session.bash 2>/dev/null; "])
+
     def step(self, n):
         text = (REPO / "CLAUDE.md").read_text()
         return re.search(rf"^{n}\. .*?(?=^\d+\. |\Z)", text, re.M | re.S).group()
