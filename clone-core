@@ -2,11 +2,14 @@
 # Clone the private box-admin-core with the personal GitHub token from this shell's
 # environment, else gh's sign-in (boxes with no secret store). Never prints the token.
 # BOX_ADMIN_ROOT is where the box_admin checkouts live: an absolute path (default ~/projects/sysadmin-project/box_admin_dev;
-# an older box whose core is only in ~/projects/box_admin keeps that). On success, the last stdout line is core's path.
+# an older core in ~/projects/box_admin is used until setup_box step 1's human-approved migration). Stdout is core's path.
 case "${BOX_ADMIN_ROOT:-}" in ""|/*) ;; *) echo "clone-core: BOX_ADMIN_ROOT must be an absolute path" >&2; exit 1;; esac
 dest="${BOX_ADMIN_ROOT:-$HOME/projects/sysadmin-project/box_admin_dev}/box_admin_core"
 old="$HOME/projects/box_admin/box_admin_core"
-if [ -z "${BOX_ADMIN_ROOT:-}" ] && [ ! -d "$dest/.git" ] && [ -d "$old/.git" ]; then dest="$old"; fi
+if [ -z "${BOX_ADMIN_ROOT:-}" ] && [ ! -d "$dest/.git" ] && [ -d "$old/.git" ]; then
+  dest="$old"
+  echo "clone-core: migration pending: setup_box step 1 needs human approval to move the existing layout." >&2
+fi
 if [ -d "$dest/.git" ]; then echo "clone-core: core is already at $dest" >&2; echo "$dest"; exit 0; fi
 t="${GH_TOKEN_PERSONAL:-}"
 if [ -z "$t" ] && command -v gh >/dev/null; then

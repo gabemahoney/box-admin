@@ -8,7 +8,7 @@ github.com/gabemahoney/box-admin into ~/projects/box-admin and follow it; layer 
 in the README of your box type's layer repo; without it, Claude asks for it. Claude clones the private
 core repo with the box's GitHub token (or walks you through a quick gh sign-in), bootstraps that layer and
 carries on. If the bootstrap fails, Claude shows what it printed and stops. Tokens are never printed or
-pasted into a chat. A checkout of this repo that already exists elsewhere is used where it is.
+pasted into a chat. On existing boxes, setup_box checks the layout before bootstrap.
 
 That start line is enough: if the layer has no `SKILL.md` or no `hosts/<host>/`, Claude opens a
 read-only intake PR, polls it and the layer every few minutes, answers comments and reviews the owner's
@@ -33,5 +33,7 @@ have none):
 bash -c 'set +x; IFS= read -rs -p "GH_TOKEN_PERSONAL: " GH_TOKEN_PERSONAL; echo; IFS= read -rs -p "GH_TOKEN_WORK: " GH_TOKEN_WORK; echo; export GH_TOKEN_PERSONAL GH_TOKEN_WORK; exec claude --permission-mode acceptEdits --allowedTools Bash'
 ```
 
-The core and layer checkouts go in `~/projects/sysadmin-project/box_admin_dev` (core's standard layout; an older box whose core is only in `~/projects/box_admin` keeps using that). To put them elsewhere, export
-`BOX_ADMIN_ROOT=<absolute dir>` in the shell before starting `claude`.
+The standard layout uses `~/projects/sysadmin-project/box_admin_dev` for core, layer and entry (`box_admin`).
+A core found only in `~/projects/box_admin` is used until setup_box step 1's human-approved migration;
+declared off-limits paths stay put. To override only the core/layer root, export
+`BOX_ADMIN_ROOT=<absolute dir>` before starting `claude`.
