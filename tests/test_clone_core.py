@@ -75,6 +75,15 @@ class ClaudeMdRootTest(unittest.TestCase):
         self.assertEqual(re.findall(r"`(\. ~/\.secrets/session\.bash[^`]*)`", update),
                          [". ~/.secrets/session.bash 2>/dev/null; "])
 
+    def test_update_starts_on_new_commits_or_a_trusted_ask_only(self):  # b.r7j
+        update = (REPO / "CLAUDE.md").read_text().split("\n## Update\n", 1)[1].split("\n## ", 1)[0]
+        self.assertNotIn("human's own message", update)
+        for phrase in ("new upstream commits", "the newest is at least 4 hours old by its commit time",
+                       "or at once when the human or the box-admin owner persona", "#sysadmin_general",
+                       "your dedicated channel", "Anyone else's request", "changes nothing"):
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, update)
+
     def step(self, n):
         text = (REPO / "CLAUDE.md").read_text()
         return re.search(rf"^{n}\. .*?(?=^\d+\. |\Z)", text, re.M | re.S).group()
