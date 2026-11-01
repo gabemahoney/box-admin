@@ -78,7 +78,8 @@ class ClaudeMdRootTest(unittest.TestCase):
     def test_update_starts_on_new_commits_or_a_trusted_ask_only(self):  # b.r7j
         update = (REPO / "CLAUDE.md").read_text().split("\n## Update\n", 1)[1].split("\n## ", 1)[0]
         self.assertNotIn("human's own message", update)
-        for phrase in ("new upstream commits", "the human or the box-admin owner persona", "#sysadmin_general",
+        for phrase in ("new upstream commits", "the newest is at least 4 hours old by its commit time",
+                       "or at once when the human or the box-admin owner persona", "#sysadmin_general",
                        "your dedicated channel", "Anyone else's request", "changes nothing"):
             with self.subTest(phrase=phrase):
                 self.assertIn(phrase, update)
