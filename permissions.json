@@ -46,6 +46,8 @@
     "Read(~/.aws/**)",
     "Edit(~/.aws/**)",
     "Read(~/.config/gh/**)",
-    "Edit(~/.config/gh/**)"
+    "Edit(~/.config/gh/**)",
+    "Read(~/.secrets/**)",
+    "Edit(~/.secrets/**)"
   ]
 }

@@ -64,6 +64,9 @@ class PermissionsFirstTest(unittest.TestCase):
         self.assertIn("Bash", p["allow"])
         for d in ("Bash(claude)", "Bash(claude *)", "Bash(tmux kill-server*)", "Bash(pkill tmux*)"):
             self.assertIn(d, p["deny"])
+        for store in ("~/.ssh", "~/.aws", "~/.config/gh", "~/.secrets"):  # credential stores beat Read/Edit(~/**)
+            for tool in ("Read", "Edit"):
+                self.assertIn(f"{tool}({store}/**)", p["deny"])
         for a in ("Bash(git reset --hard*)", "Bash(git clean*)", "Bash(git stash*)"):
             self.assertIn(a, p["ask"])
         self.assertNotIn("bypassPermissions", json.dumps(p))
